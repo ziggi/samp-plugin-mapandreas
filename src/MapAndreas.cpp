@@ -47,16 +47,15 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
 
     if (len > 1) {
         strlcpy(name, cname, MAP_ANDREAS_MAX_NAME);
-    }
-    else {
+    } else {
         switch (iMode) {
-        case MAP_ANDREAS_MODE_NOBUFFER:
-        case MAP_ANDREAS_MODE_FULL:
-            strlcpy(name, MAP_ANDREAS_HMAP_FILE_FULL, MAP_ANDREAS_MAX_NAME);
-            break;
-        case MAP_ANDREAS_MODE_MINIMAL:
-            strlcpy(name, MAP_ANDREAS_HMAP_FILE_MINIMAL, MAP_ANDREAS_MAX_NAME);
-            break;
+            case MAP_ANDREAS_MODE_NOBUFFER:
+            case MAP_ANDREAS_MODE_FULL:
+                strlcpy(name, MAP_ANDREAS_HMAP_FILE_FULL, MAP_ANDREAS_MAX_NAME);
+                break;
+            case MAP_ANDREAS_MODE_MINIMAL:
+                strlcpy(name, MAP_ANDREAS_HMAP_FILE_MINIMAL, MAP_ANDREAS_MAX_NAME);
+                break;
         }
     }
     if (iMode == MAP_ANDREAS_MODE_FULL) {
@@ -80,8 +79,7 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
         m_iOperatingMode = MAP_ANDREAS_MODE_FULL;
         m_gridSize = MAP_ANDREAS_GRID_FULL;
         return MAP_ANDREAS_ERROR_SUCCESS;
-    }
-    else if (iMode == MAP_ANDREAS_MODE_MINIMAL) {
+    } else if (iMode == MAP_ANDREAS_MODE_MINIMAL) {
         m_pPointData = (unsigned short *)calloc(MAP_ANDREAS_POINTS_MINIMAL, sizeof(unsigned short));
         if (NULL == m_pPointData) {
             return MAP_ANDREAS_ERROR_MEMORY;
@@ -100,8 +98,7 @@ int CMapAndreas::Init(int iMode, char* cname, int len)
         m_iOperatingMode = MAP_ANDREAS_MODE_MINIMAL;
         m_gridSize = MAP_ANDREAS_GRID_MINIMAL;
         return MAP_ANDREAS_ERROR_SUCCESS;
-    }
-    else if (iMode == MAP_ANDREAS_MODE_NOBUFFER) {
+    } else if (iMode == MAP_ANDREAS_MODE_NOBUFFER) {
         m_iOperatingMode = MAP_ANDREAS_MODE_NOBUFFER;
         m_gridSize = MAP_ANDREAS_GRID_FULL;
         m_pPointData = (unsigned short *)calloc(1, sizeof(unsigned short));
@@ -123,11 +120,9 @@ float CMapAndreas::FindZ_For2DCoord(float X, float Y, int dataPos)
         // get data
         if (m_iOperatingMode == MAP_ANDREAS_MODE_FULL) {
             return (float)m_pPointData[dataPos] / 100.0f; // the data is a float stored as ushort * 100
-        }
-        else if (m_iOperatingMode == MAP_ANDREAS_MODE_MINIMAL) {
+        } else if (m_iOperatingMode == MAP_ANDREAS_MODE_MINIMAL) {
             return (float)m_pPointData[dataPos] / 100.0f;
-        }
-        else if (m_iOperatingMode == MAP_ANDREAS_MODE_NOBUFFER) {
+        } else if (m_iOperatingMode == MAP_ANDREAS_MODE_NOBUFFER) {
             // Jump to the position in the file and read it
             fseek(mapFile, dataPos * sizeof(unsigned short), SEEK_SET);
             fread(&m_pPointData[0], 1, sizeof(unsigned short), mapFile);
@@ -135,8 +130,7 @@ float CMapAndreas::FindZ_For2DCoord(float X, float Y, int dataPos)
             return (float)m_pPointData[0] / 100.0f;
         }
         return 0.0f;
-    }
-    else {
+    } else {
         // check for a co-ord outside the map
         if (X < -3000.0f || X > 3000.0f || Y > 3000.0f || Y < -3000.0f) {
             return 0.0f;
@@ -151,12 +145,10 @@ float CMapAndreas::FindZ_For2DCoord(float X, float Y, int dataPos)
         if (m_iOperatingMode == MAP_ANDREAS_MODE_FULL) {
             iDataPos = (iGridY * 6000) + iGridX; // for every Y, increment by the number of cols, add the col index.
             return (float)m_pPointData[iDataPos] / 100.0f; // the data is a float stored as ushort * 100
-        }
-        else if (m_iOperatingMode == MAP_ANDREAS_MODE_MINIMAL) {
+        } else if (m_iOperatingMode == MAP_ANDREAS_MODE_MINIMAL) {
             iDataPos = ((iGridY / 3) * 2000) + iGridX / 3;    // skip every 2nd and 3rd line
             return (float)m_pPointData[iDataPos] / 100.0f;
-        }
-        else if (m_iOperatingMode == MAP_ANDREAS_MODE_NOBUFFER) {
+        } else if (m_iOperatingMode == MAP_ANDREAS_MODE_NOBUFFER) {
             iDataPos = (iGridY * 6000) + iGridX;
 
             // Jump to the position in the file and read it
@@ -185,14 +177,12 @@ int CMapAndreas::SetZ_For2DCoord(float X, float Y, float z)
         iDataPos = (iGridY * 6000) + iGridX;
         m_pPointData[iDataPos] = (short)(z * 100.0f + 0.5); // Add 0.5 to round it properly
         return 1;
-    }
-    else {
+    } else {
         if (m_iOperatingMode == MAP_ANDREAS_MODE_MINIMAL) {
             iDataPos = ((iGridY / 3) * 2000) + iGridX / 3;    // skip every 2nd and 3rd line
             m_pPointData[iDataPos] = (short)(z * 100.0f + 0.5); // Add 0.5 to round it properly
             return 1;
-        }
-        else if (m_iOperatingMode == MAP_ANDREAS_MODE_NOBUFFER) {
+        } else if (m_iOperatingMode == MAP_ANDREAS_MODE_NOBUFFER) {
             return 0;
         }
     }
@@ -204,17 +194,17 @@ int CMapAndreas::SaveCurrentHMap(char* name)
 {
     int values = 0;
     switch (m_iOperatingMode) {
-    case MAP_ANDREAS_MODE_NONE:
-        return 0;
-    case MAP_ANDREAS_MODE_FULL:
-        values = MAP_ANDREAS_POINTS_FULL;
-        break;
-    case MAP_ANDREAS_MODE_MEDIUM:
-        values = MAP_ANDREAS_POINTS_MEDIUM;
-        break;
-    case MAP_ANDREAS_MODE_MINIMAL:
-        values = MAP_ANDREAS_POINTS_MINIMAL;
-        break;
+        case MAP_ANDREAS_MODE_NONE:
+            return 0;
+        case MAP_ANDREAS_MODE_FULL:
+            values = MAP_ANDREAS_POINTS_FULL;
+            break;
+        case MAP_ANDREAS_MODE_MEDIUM:
+            values = MAP_ANDREAS_POINTS_MEDIUM;
+            break;
+        case MAP_ANDREAS_MODE_MINIMAL:
+            values = MAP_ANDREAS_POINTS_MINIMAL;
+            break;
     }
 
     FILE *fileInput = NULL;
