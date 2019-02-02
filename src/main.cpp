@@ -6,7 +6,7 @@
 
 logprintf_t logprintf;
 
-extern "C" AMX_NATIVE_INFO nativeList[] = {
+AMX_NATIVE_INFO nativeList[] = {
     { "MapAndreas_Init", Natives::Init },
     { "MapAndreas_FindZ_For2DCoord", Natives::FindZ_For2DCoord },
     { "MapAndreas_FindAverageZ", Natives::FindAverageZ },

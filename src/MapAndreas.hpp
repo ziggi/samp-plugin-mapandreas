@@ -8,6 +8,11 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "strlcpy.h"
+
+#if LINUX
+	#include "fopen_s.h"
+#endif
 
 #include "common.hpp"
 
@@ -34,6 +39,7 @@
 #define MAP_ANDREAS_ERROR_MEMORY 2
 #define MAP_ANDREAS_ERROR_DATA_FILES 3
 
+#define MAP_ANDREAS_MAX_NAME 128
 //----------------------------------------------------------
 
 class CMapAndreas {
@@ -45,14 +51,17 @@ private:
 
 public:
     CMapAndreas();
+	CMapAndreas(const CMapAndreas *other);
     ~CMapAndreas();
 
     int Init(int iMode, char* cname, int len);
-    float FindZ_For2DCoord(float X, float Y);
+    float FindZ_For2DCoord(float X, float Y, int dataPos = -1);
     int SetZ_For2DCoord(float X, float Y, float z);
     int SaveCurrentHMap(char* name);
     float GetAverageZ(float x, float y);
     bool Unload();
+	bool IsInited();
+	int GetOperatingMode();
 };
 
 //----------------------------------------------------------

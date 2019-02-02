@@ -10,9 +10,6 @@ if(UNIX)
 	set_property(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS OFF)
 endif()
 
-# removes the sprintf warnings from plugin-natives
-add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/test/plugins)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})

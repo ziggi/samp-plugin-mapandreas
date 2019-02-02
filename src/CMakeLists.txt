@@ -6,12 +6,22 @@ find_package(SAMPSDK REQUIRED)
 
 include_directories(
 	${SAMPSDK_INCLUDE_DIR}
+	${PROJECT_SOURCE_DIR}/lib/strlcpy
 )
+
+if(UNIX)
+	include_directories(
+		${PROJECT_SOURCE_DIR}/lib/fopen_s
+	)
+	set(FOPEN_FILE ${PROJECT_SOURCE_DIR}/lib/fopen_s/fopen_s.cpp)
+endif()
 
 add_samp_plugin(mapandreas
 	${SAMPSDK_DIR}/amxplugin.cpp
 	${SAMPSDK_DIR}/amxplugin2.cpp
 	${SAMPSDK_DIR}/amx/getch.c
+	${PROJECT_SOURCE_DIR}/lib/strlcpy/strlcpy.cpp
+	${FOPEN_FILE}
 	common.hpp
 	main.cpp
 	MapAndreas.cpp
